@@ -28,7 +28,7 @@ const getAsyncReducer = (actionType, { initialState = {}, merge: defaultMerge = 
                 // merge handling can be added here in case our products API is paginated, to merge next page data in redux store
                 return {
                     ...state,
-                    ...data,
+                    data,
                     isLoading: false,
                     loaded: action.type === SUCCESS, // Todo: Check
                     loadingData: undefined,

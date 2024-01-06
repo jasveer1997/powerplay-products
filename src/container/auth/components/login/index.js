@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Button, Col, Form, Input, Row, notification} from 'antd';
 import {useAuth} from "../../hooks/useAuth";
+import {USER_AUTH_STATE} from "../../config/constants";
 
 const LoginLayout = ({ doLogin, isLoading }) => (
     <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh'}}>
@@ -65,7 +66,7 @@ const LoginLayout = ({ doLogin, isLoading }) => (
     </Row>
 );
 
-const Wrapper = ({ doLogin, login = {} }) => {
+const Wrapper = ({ doLogin, setCurrentUserState, login = {} }) => {
     const [username, setUsername] = useState('');
     const navigate = useNavigate();
     const { loginUserToBrowserSession } = useAuth();
@@ -98,7 +99,8 @@ const Wrapper = ({ doLogin, login = {} }) => {
                 description: "Welcome to powerplay products",
                 placement: 'top',
             });
-            loginUserToBrowserSession(username, login.token)
+            loginUserToBrowserSession(username, login.token);
+            setCurrentUserState(USER_AUTH_STATE.ACTIVE);
             navigate('/');
         }
     }, [login.loaded, login.hasError, username]);

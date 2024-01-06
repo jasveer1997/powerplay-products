@@ -8,6 +8,7 @@ const get = async ({ urlObj }) => {
         console.log(response.statusText);
         console.log(response.headers);
         console.log(response.config);
+        return response;
     } catch (error) {
         console.error(error);
         throw error;

@@ -28,10 +28,9 @@ const AppWithReduxStoreAndRoutes = () => {
         <ReduxStoreProvider>
         <Router>
             <Routes>
-                <Route path="/" element={<Wrapper setCurrentUserState={setCurrentUserState} />} />
                 <Route path="/login" element={<Auth currentUserState={currentUserState} setCurrentUserState={setCurrentUserState} />} />
-                <Route path="/product/:pid" element={<SingleProduct />} />
-                <Route path="/cart" element={<Cart />} />
+                <Route path="/products/*" element={<Wrapper setCurrentUserState={setCurrentUserState} />} />
+                <Route path="*" element={<Wrapper setCurrentUserState={setCurrentUserState} />} />
             </Routes>
         </Router>
         </ReduxStoreProvider>

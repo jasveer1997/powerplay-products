@@ -1,11 +1,17 @@
 import { Card, Row, Col, Space, Button } from 'antd';
-import {Link, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const ProductsLayout = ({ products, setItemCount, itemCount }) => {
     const [expandedDescription, setExpandedDescription] = useState({});
     const navigate = useNavigate();
+    const location = useLocation();
+    useEffect(() => {
+        if (location.pathname !== '/products') {
+            navigate('/products', { replace: true });
+        }
+    }, [location.pathname, navigate]);
     const toggleDescription = (index) => {
         setExpandedDescription((prevExpanded) => ({
             ...prevExpanded,
@@ -43,7 +49,7 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
                             bodyStyle={{ minHeight: '200px' }}
                             actions={[
                                 <div key="details">
-                                <Button onClick={() => navigate(`/product/${id}`)}>
+                                <Button onClick={() => navigate(`product/${id}`)}>
                                     Details
                                 </Button>
                                 </div>,

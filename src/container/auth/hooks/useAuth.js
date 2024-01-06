@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { get } from "../../../utils/localStorage";
+import { get, set, remove } from "../../../utils/localStorage";
 import {isNull} from "../../../utils";
 
 export const useAuth = () => {
@@ -10,9 +10,13 @@ export const useAuth = () => {
         return !isNull(localSession);
     }, [get]);
 
-    const logoutUserFromSession = useCallback(() => {}, []);
+    const logoutUserFromSession = useCallback(() => {
+        remove("powerplay_user");
+    }, []);
 
-    const loginUserToBrowserSession = useCallback(() => {}, []);
+    const loginUserToBrowserSession = useCallback((username, token) => {
+        set("powerplay_user", { username, token });
+    }, [set]);
 
     return { isUserLoggedInToBrowserSession, logoutUserFromSession, loginUserToBrowserSession };
 };

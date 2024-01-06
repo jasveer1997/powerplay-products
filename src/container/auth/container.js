@@ -10,6 +10,7 @@ import saga from './saga';
 
 const mapStateToProps = ({ login = {}}) => {
     console.log("login data in store: ", login);
+    return login;
 }
 
 const mapDispatchToProps = dispatch => ({

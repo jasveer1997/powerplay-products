@@ -15,13 +15,13 @@ const get = async ({ urlObj }) => {
 };
 
 const post = async ({ urlObj, req }) => {
-    axios.post(urlObj.url, req.body)
-        .then((response) => {
-            return res=>res.json();
-        }, (error) => {
-            console.log(error);
-            throw error;
-        });
+    try {
+        const response = await axios.post(urlObj.url, req.body);
+        return response.data; // Return the response data
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 };
 
 export { get, post };

@@ -20,3 +20,4 @@ export default AuthService;
 
 
 // Future dev: preference setup for login
+// Cant encrypt password (Fake API accepts json string only) - transferred over network as json string - VULNERABILITY

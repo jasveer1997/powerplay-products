@@ -1,55 +1,40 @@
-import './app.css';
+import { useEffect } from "react";
+// import './app.css';
+import { useNavigate, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../../container/auth';
 import Auth from '../../container/auth';
 import ReduxStoreProvider from '../../helper/store';
-import { useEffect } from "react";
-
-function Layout() {
-    return (
-        <div className="App">
-            <header className="App-header">
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
-    );
-}
 
 const Wrapper = () => {
     // First check for login with login module. (We can have a utility)
     const { isUserLoggedInToBrowserSession } = useAuth();
     const isUserAllowedToEnter = isUserLoggedInToBrowserSession();
+    const navigate = useNavigate();
     useEffect(() => {
-     console.log("mounted");
-     return () => console.log("unmounted");
-    }, []);
-    if(!isUserAllowedToEnter) {
-        return (
-            <Auth />
-        )
-    }
-    //
+        if (!isUserAllowedToEnter) {
+            navigate('/login');
+        }
+    }, [isUserAllowedToEnter, navigate]);
+
+    return  <div>abc</div>
 };
 
-const AppWithReduxStore = () => {
-    useEffect(() => {
-        console.log("main mounted");
-        return () => console.log("main unmounted");
-    }, []);
+const SingleProduct = null;
+const Cart = null;
+
+const AppWithReduxStoreAndRoutes = () => {
     return (
         <ReduxStoreProvider>
-            <Wrapper />
+        <Router>
+            <Routes>
+                <Route path="/" element={<Wrapper />} />
+                <Route path="/login" element={<Auth />} />
+                <Route path="/product/:pid" element={<SingleProduct />} />
+                <Route path="/cart" element={<Cart />} />
+            </Routes>
+        </Router>
         </ReduxStoreProvider>
     );
 };
 
-export default AppWithReduxStore;
+export default AppWithReduxStoreAndRoutes;

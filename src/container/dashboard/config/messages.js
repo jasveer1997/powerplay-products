@@ -15,4 +15,6 @@ export const CART_MSGS = {
     EMPTY: "Cart is empty currently.",
     CHECKOUT: "Proceed to Checkout",
     REMOVE_FROM_CART: "Remove",
+    TOTAL_ITEMS: "Total Items:",
+    TOTAL_PRICE: "Total Price:",
 }

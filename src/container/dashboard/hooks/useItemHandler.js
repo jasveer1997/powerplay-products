@@ -17,9 +17,18 @@ export const useItemHandler = ({ setItemCount }) => {
         }));
     }, [setItemCount]);
 
+    const removeItem = useCallback((id) => {
+        setItemCount((prevCount) => ({
+            ...prevCount,
+            [id]: 0,
+        }));
+    }, [setItemCount]);
+
     const curriedDecrementItem = (id) => ()  => decrementItem(id);
 
     const curriedIncrementItem = (id) => ()  => incrementItem(id);
 
-    return { curriedIncrementItem, curriedDecrementItem };
+    const curriedRemoveItem = (id) => ()  => removeItem(id);
+
+    return { curriedIncrementItem, curriedDecrementItem, curriedRemoveItem };
 };

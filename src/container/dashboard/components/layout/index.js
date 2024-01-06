@@ -8,7 +8,15 @@ import {useDescription} from "../../hooks/useDescription";
 import {useItemHandler} from "../../hooks/useItemHandler";
 import {useNavigation as useCustomNavigation} from "../../hooks/useNavigation";
 import {ROUTES} from "../../../../config/routes";
-import {CardStyle, CounterStyle, DescriptionStyle, ItemCountStyle, LayoutColStyle, ProductsStyle} from "./style";
+import {
+    CardStyle,
+    CounterStyle,
+    DescriptionStyle,
+    ImageStyle,
+    ItemCountStyle,
+    LayoutColStyle,
+    ProductsStyle
+} from "./style";
 import {CARD_MSGS} from "../../config/messages";
 import {MAX_DESC_LEN} from "../../config/constants";
 
@@ -36,7 +44,11 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
                         <Card
                             {...CardStyle}
                             hoverable
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                            cover={
+                                <div {...ImageStyle}>
+                                    <img alt="example" style={{ height: "80%" }} src={image} />
+                                </div>
+                            }
                             actions={[
                                 <div key="details">
                                     <Button onClick={navToProductDetail(id)}>
@@ -70,5 +82,3 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
 };
 
 export default ProductsLayout;
-
-// Todo: Height adjustment upon using actual img.

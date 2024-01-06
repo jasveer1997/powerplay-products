@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Route, Routes} from "react-router-dom";
 
-import {Layout, Menu, Skeleton} from 'antd';
+import {Layout, Menu} from 'antd';
 
 import container from "./container";
 import ProductsLayout from "./components/layout";
@@ -11,6 +11,7 @@ import {SIDEBAR_ITEMS} from "./config/constants";
 import DashboardHeader from "./components/header";
 import DashboardFooter from "./components/footer";
 import {ContentStyle, HeaderStyle, LayoutStyle, SideStyle, StyleFooter} from "./style";
+import SkeletonGrid from "./components/skeletonLoader";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -19,7 +20,7 @@ const DashboardRouting = props => {
 
     // Render loaders
     if (productsData.isLoading || !productsData.loaded) {
-        return <Skeleton active />;
+        return <SkeletonGrid active />;
     }
 
     return (
@@ -68,7 +69,6 @@ const Dashboard = ({ userDetails, fetchProducts, ...rest }) => {
 
 export default container(Dashboard);
 
-// Todo: Add Carousel of 3-4 images
-// Todo: Convert loader to skeleton list
-// Todo: Add filters, Search, sort
-// Todo: Add itemCount to url/ls
+// Later/Future: Add Carousel of 3-4 images
+// Later/Future: Add filters, Search, sort
+// Later/future: Add itemCount to url/ls

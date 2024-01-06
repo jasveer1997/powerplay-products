@@ -18,4 +18,4 @@ import { set, get, remove } from 'local-storage';
 
 export { set, get, remove };
 
-// Todo: Implement on to listen for cross browser support.
+// Later: Implement `on` to listen for cross tabs support for login.

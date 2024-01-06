@@ -44,3 +44,13 @@ export const DescriptionStyle = {
         cursor: 'pointer'
     }
 };
+
+export const ImageStyle = {
+    style: {
+        overflow: "hidden",
+        height: "150px",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+    }
+};

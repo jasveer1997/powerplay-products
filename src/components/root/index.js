@@ -4,15 +4,18 @@ import ReduxStoreProvider from '../../helper/store';
 import Auth, { useAuth } from '../../container/auth';
 import Dashboard from "../../container/dashboard";
 import {USER_AUTH_STATE} from "../../container/auth/config/constants";
+import {ROUTES} from "../../config/routes";
 
 const Wrapper = props => {
-    // First check for login with login module. (We can have a utility)
+    const navigate = useNavigate();
+
+    // First check for login with login module.
     const { isUserLoggedInToBrowserSession } = useAuth();
     const isUserAllowedToEnter = isUserLoggedInToBrowserSession();
-    const navigate = useNavigate();
+
     useEffect(() => {
         if (!isUserAllowedToEnter) {
-            navigate('/login');
+            navigate(ROUTES.LOGIN);
         }
     }, [isUserAllowedToEnter, navigate]);
 

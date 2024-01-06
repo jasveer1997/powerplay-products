@@ -1,8 +1,13 @@
-import {useEffect, useState} from 'react';
-import {Card, Button, Row, Col, Tag, Typography} from 'antd';
-import { PlusOutlined, MinusOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import {useMemo} from 'react';
 import {Link, useParams} from "react-router-dom";
+
+import {Card, Button, Row, Col, Tag, Typography} from 'antd';
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+
+import {useItemHandler} from "../../hooks/useItemHandler";
 import {isNull} from "../../../../utils";
+import {ImageStyle, TagStyle} from "./style";
+import {PRODUCT_MSGS} from "../../config/messages";
 
 const { Text } = Typography;
 
@@ -16,53 +21,34 @@ const ProductDetail = props => {
     // }, [singleProductData.loaded]);
 
     const { pid } = useParams();
-
     const { products, itemCount, setItemCount } = props;
 
-    const product = products.find(({ id }) => id.toString() === pid) || null;
-
+    const { curriedIncrementItem, curriedDecrementItem } = useItemHandler({ setItemCount });
+    const product = useMemo(() => products.find(({ id }) => id.toString() === pid) || null, [products]);
     if (isNull(product)) {
-        // Todo: Redirect to Invalid page / Home page
         return <div>product not found</div>;
     }
 
-
     const { title, description, image, price, rating: { rate, count }, category } = product;
-
-    const incrementQuantity = () => {
-        setItemCount((prevCount) => ({
-            ...prevCount,
-            [pid]: (prevCount[pid] || 0) + 1,
-        }));
-    };
-
-    const decrementQuantity = () => {
-        setItemCount((prevCount) => ({
-            ...prevCount,
-            [pid]: (prevCount[pid] || 0) - 1,
-        }));
-    };
-
     return (
         <div>
             <Card
                 title={title}
-                cover={<img alt={title} src={image} style={{ height: '3in', width: '3in', objectFit: 'contain', margin: '0 auto' }} />}
-                extra={<Button icon={<ShoppingCartOutlined />} />}
+                cover={<img alt={title} src={image} {...ImageStyle} />}
             >
                 <Typography>
-                    <Text strong>Description: </Text>
+                    <Text strong>{PRODUCT_MSGS.DESCRIPTION} </Text>
                     {description}
                 </Typography>
                 <Typography>
-                    <Text strong>Price: </Text>
+                    <Text strong>{PRODUCT_MSGS.PRICE} </Text>
                     ${price}
                 </Typography>
                 <Typography>
-                    <Text strong>Rating: </Text>
+                    <Text strong>{PRODUCT_MSGS.RATING} </Text>
                     {`${rate}(${count})`}
                 </Typography>
-                <div style={{ marginBottom: '8px' }}>
+                <div {...TagStyle}>
                     <Tag color="blue" key={category}>
                         {category}
                     </Tag>
@@ -72,18 +58,18 @@ const ProductDetail = props => {
                         <Button
                             type="text"
                             icon={<MinusOutlined />}
-                            onClick={decrementQuantity}
+                            onClick={curriedDecrementItem(pid)}
                             disabled={itemCount[pid] <= 0}
                         />
                     </Col>
                     <Col>{itemCount[pid]}</Col>
                     <Col>
-                        <Button type="text" icon={<PlusOutlined />} onClick={incrementQuantity} />
+                        <Button type="text" icon={<PlusOutlined />} onClick={curriedIncrementItem(pid)} />
                     </Col>
                     <Col>
                         <Link to="/cart">
                             <Button type="primary">
-                                View Cart
+                                {PRODUCT_MSGS.VIEW_CART}
                             </Button>
                         </Link>
                     </Col>
@@ -94,3 +80,5 @@ const ProductDetail = props => {
 };
 
 export default ProductDetail;
+
+// Todo: Redirect to Invalid page / Home page if directly opened and pId is not a valid value

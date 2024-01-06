@@ -1,47 +1,36 @@
-import {Card, Row, Col, Button, notification} from 'antd';
+import {Card, Row, Col, Button, notification, Typography} from 'antd';
 import {MinusOutlined, PlusOutlined} from "@ant-design/icons";
+import {useCallback, useMemo} from "react";
+import {useItemHandler} from "../../hooks/useItemHandler";
+import {CART_MSGS, PRODUCT_MSGS} from "../../config/messages";
+import {ItemImageStyle, ItemsCardStyle, ProceedCardStyle} from "./style";
 
-const Cart = ({ products, setItemCount, itemCount }) => {
+const { Text } = Typography;
 
-    const cartItems = products.filter(({ id }) => itemCount[id] || 0 > 0).map(productDetails => ({ ...productDetails, count: itemCount[productDetails.id]}));
-    const renderCartItem = (item) => {
-        const incrementQuantity = () => {
-            setItemCount((prevCount) => ({
-                ...prevCount,
-                [item.id]: (prevCount[item.id] || 0) + 1,
-            }));
-        };
-
-        const decrementQuantity = () => {
-            setItemCount((prevCount) => ({
-                ...prevCount,
-                [item.id]: (prevCount[item.id] || 0) - 1,
-            }));
-        };
-
-        return (
-            <Card key={item.id} style={{ marginBottom: 16 }}>
+const CartItem = ({ item, setItemCount, itemCount }) => {
+    const { curriedIncrementItem, curriedDecrementItem } = useItemHandler({ setItemCount });
+    return (
+        <Card key={item.id} {...ItemsCardStyle}>
             <Row gutter={[16, 16]} align="middle">
                 <Col span={6}>
-                    <img src={item.image} alt={item.title} style={{ maxWidth: '100%' }} />
+                    <img src={item.image} alt={item.title} {...ItemImageStyle} />
                 </Col>
                 <Col span={12}>
                     <p>Title: {item.title}</p>
                     <p>Count: {item.count}</p>
                     <p>Price: ${item.price}</p>
                 </Col>
-
                 <Col>
                     <Button
                         type="text"
                         icon={<MinusOutlined />}
-                        onClick={decrementQuantity}
+                        onClick={curriedDecrementItem(item.id)}
                         disabled={itemCount[item.id] <= 0}
                     />
                 </Col>
                 <Col>{itemCount[item.id]}</Col>
                 <Col>
-                    <Button type="text" icon={<PlusOutlined />} onClick={incrementQuantity} />
+                    <Button type="text" icon={<PlusOutlined />} onClick={curriedIncrementItem(item.id)} />
                 </Col>
 
                 <Col span={6}>
@@ -51,41 +40,51 @@ const Cart = ({ products, setItemCount, itemCount }) => {
                             [item.id]: 0,
                         }));
                     }}>
-                        Remove
+                        {CART_MSGS.REMOVE_FROM_CART}
                     </Button>
                 </Col>
             </Row>
         </Card>
+    );
+};
+
+const Cart = ({ products, setItemCount, itemCount }) => {
+
+    const cartItems = useMemo(() =>
+        products
+            .filter(({ id }) => itemCount[id] || 0 > 0)
+            .map(productDetails => ({ ...productDetails, count: itemCount[productDetails.id]})),
+        [products]);
+    const totalItems = useMemo(() => cartItems.reduce((acc, item) => acc + item.count, 0), [cartItems]);
+    const totalPrice = useMemo(() => cartItems.reduce((acc, item) => acc + item.price * item.count, 0), [cartItems]);
+
+    const checkoutNtf = useCallback(() => notification.info({
+        duration: 2,
+        message: `Checkout...`,
+        description: "Stay tuned to checkout!",
+        placement: 'top',
+    }), []);
+
+    if (cartItems.length === 0) {
+        return (
+            <Typography>
+                <Text strong>{CART_MSGS.EMPTY} </Text>
+            </Typography>
         );
-    };
-
-    const renderCartItems = () => {
-        if (cartItems.length === 0) {
-            return <div>No items in the cart</div>;
-        }
-
-        return cartItems.map((item) => renderCartItem(item));
-    };
-
-    const totalItems = cartItems.reduce((acc, item) => acc + item.count, 0);
+    }
 
     return (
         <Row gutter={[16, 16]}>
             <Col span={16}>
-                <div>{renderCartItems()}</div>
+                <div>{cartItems.map((item) => <CartItem itemCount={itemCount} item={item} setItemCount={setItemCount} />)}</div>
             </Col>
             <Col span={8}>
-                <Card title="Checkout" style={{ height: '100%' }}>
+                <Card title="Checkout" {...ProceedCardStyle}>
                     <p>Total Items: {totalItems}</p>
-                    <p>Total Price: ${cartItems.reduce((acc, item) => acc + item.price * item.count, 0)}</p>
+                    <p>Total Price: {totalPrice}</p>
                     {/*<Link to="/checkout">*/}
-                        <Button disabled={totalItems === 0} type="primary" onClick={() => notification.info({
-                            duration: 2,
-                            message: `Checkout...`,
-                            description: "Stay tuned to checkout!",
-                            placement: 'top',
-                        })}>
-                            Proceed to Checkout
+                        <Button disabled={totalItems === 0} type="primary" onClick={checkoutNtf}>
+                            {CART_MSGS.CHECKOUT}
                         </Button>
                     {/*</Link>*/}
                 </Card>

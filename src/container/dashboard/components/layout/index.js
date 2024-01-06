@@ -1,83 +1,64 @@
-import { Card, Row, Col, Space, Button } from 'antd';
+import {useEffect} from "react";
 import {useLocation, useNavigate} from 'react-router-dom';
+
+import { Card, Row, Col, Button } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import {useEffect, useState} from "react";
+
+import {useDescription} from "../../hooks/useDescription";
+import {useItemHandler} from "../../hooks/useItemHandler";
+import {useNavigation as useCustomNavigation} from "../../hooks/useNavigation";
+import {ROUTES} from "../../../../config/routes";
+import {CardStyle, CounterStyle, DescriptionStyle, ItemCountStyle, LayoutColStyle, ProductsStyle} from "./style";
+import {CARD_MSGS} from "../../config/messages";
+import {MAX_DESC_LEN} from "../../config/constants";
 
 const ProductsLayout = ({ products, setItemCount, itemCount }) => {
-    const [expandedDescription, setExpandedDescription] = useState({});
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Effect to redirect urls
     useEffect(() => {
-        if (location.pathname !== '/products') {
-            navigate('/products', { replace: true });
+        if (location.pathname !== ROUTES.PRODUCTS) {
+            navigate(ROUTES.PRODUCTS, { replace: true });
         }
     }, [location.pathname, navigate]);
-    const toggleDescription = (index) => {
-        setExpandedDescription((prevExpanded) => ({
-            ...prevExpanded,
-            [index]: !prevExpanded[index],
-        }));
-    };
 
-    // no limit on addition for now.
-    const incrementItem = (index) => {
-        setItemCount((prevCount) => ({
-            ...prevCount,
-            [index]: (prevCount[index] || 0) + 1,
-        }));
-    };
-
-    const decrementItem = (index) => {
-        setItemCount((prevCount) => ({
-            ...prevCount,
-            [index]: (prevCount[index] || 0) - 1,
-        }));
-    };
+    // supporting hook handlers
+    const { expandedDescription, curriedToggleDesc } = useDescription();
+    const { curriedIncrementItem, curriedDecrementItem } = useItemHandler({ setItemCount });
+    const { navToProductDetail } = useCustomNavigation({ navigate });
 
     return (
         <Row gutter={[60, 60]}>
             {products?.map(({ title, description, id, image }) => (
-                <Col key={title} xs={24} sm={12} md={8} lg={6}>
-                    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <Col key={title} {...LayoutColStyle}>
+                    <div {...ProductsStyle}>
                         <Card
+                            {...CardStyle}
                             hoverable
-                            style={{
-                                width: '100%',
-                                flex: '1 1 auto',
-                                border: 'none',
-                            }}
-                            bodyStyle={{ minHeight: '200px' }}
+                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
                             actions={[
                                 <div key="details">
-                                <Button onClick={() => navigate(`product/${id}`)}>
-                                    Details
-                                </Button>
+                                    <Button onClick={navToProductDetail(id)}>
+                                        {CARD_MSGS.DETAILS_BUTTON}
+                                    </Button>
                                 </div>,
-                                <div key="actions" style={{ display: 'flex', alignItems: 'center' }}>
+                                <div key="actions" {...CounterStyle}>
                                     <Button
                                         type="text"
                                         icon={<MinusOutlined />}
-                                        onClick={() => decrementItem(id)}
+                                        onClick={curriedDecrementItem(id)}
                                         disabled={!(itemCount[id] > 0)}
                                     />
-                                    {itemCount[id] !== 0 && <div style={{ lineHeight: '32px', margin: '0 8px' }}>{itemCount[id]}</div>}
-                                    <Button type="text" icon={<PlusOutlined />} onClick={() => incrementItem(id)} />
+                                    {itemCount[id] !== 0 && <div {...ItemCountStyle}>{itemCount[id]}</div>}
+                                    <Button type="text" icon={<PlusOutlined />} onClick={curriedIncrementItem(id)} />
                                 </div>
                             ]}
-                            cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
                         >
-                            <Card.Meta
-                                title={title}
-                                description={
-                                    expandedDescription[id] ? description : `${description.slice(0, 100)}...`
-                                }
-                            />
-                            {description.length > 100 && (
-                                <div
-                                    onClick={() => toggleDescription(id)}
-                                    style={{ color: '#1890ff', cursor: 'pointer' }}
-                                >
-                                    {expandedDescription[id] ? 'Show Less' : 'Show More'}
+                            <Card.Meta title={title} description={expandedDescription[id] ? description : `${description.slice(0, MAX_DESC_LEN)}...`} />
+                            {description.length > MAX_DESC_LEN && (
+                                <div onClick={curriedToggleDesc(id)} {...DescriptionStyle}>
+                                    {expandedDescription[id] ? CARD_MSGS.SHOW_LESS_DESC : CARD_MSGS.SHOW_MORE_DESC}
                                 </div>
                             )}
                         </Card>

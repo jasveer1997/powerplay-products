@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import {useLocation, useNavigate} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 
 import { Card, Row, Col, Button } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
@@ -41,6 +41,7 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
             {products?.map(({ title, description, id, image }) => (
                 <Col key={title} {...LayoutColStyle}>
                     <div {...ProductsStyle}>
+                        <Link to={`/product/${id}`}>
                         <Card
                             {...CardStyle}
                             hoverable
@@ -55,7 +56,7 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
                                         {CARD_MSGS.DETAILS_BUTTON}
                                     </Button>
                                 </div>,
-                                <div key="actions" {...CounterStyle}>
+                                <div onClick={(e) => e.preventDefault()} key="actions" {...CounterStyle}>
                                     <Button
                                         type="text"
                                         icon={<MinusOutlined />}
@@ -74,6 +75,7 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
                                 </div>
                             )}
                         </Card>
+                        </Link>
                     </div>
                 </Col>
             ))}

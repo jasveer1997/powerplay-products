@@ -20,7 +20,7 @@ export const LayoutStyle = {
 
 export const HeaderStyle = {
     style: {
-        backgroundColor: 'red',
+        backgroundColor: 'grey',
         top: 0,
         zIndex: 1,
         height:'53px',

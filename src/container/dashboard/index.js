@@ -72,4 +72,3 @@ export default container(Dashboard);
 // Todo: Convert loader to skeleton list
 // Todo: Add filters, Search, sort
 // Todo: Add itemCount to url/ls
-// Todo: Implement back button

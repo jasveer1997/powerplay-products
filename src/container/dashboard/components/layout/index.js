@@ -36,7 +36,7 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
 
     return (
         <Row gutter={[60, 60]}>
-            {products?.map(({ title, description, id, image }, index) => (
+            {products?.map(({ title, description, id, image }) => (
                 <Col key={title} xs={24} sm={12} md={8} lg={6}>
                     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <Card
@@ -57,11 +57,11 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
                                     <Button
                                         type="text"
                                         icon={<MinusOutlined />}
-                                        onClick={() => decrementItem(index)}
-                                        disabled={!(itemCount[index] > 0)}
+                                        onClick={() => decrementItem(id)}
+                                        disabled={!(itemCount[id] > 0)}
                                     />
-                                    {itemCount[index] !== 0 && <div style={{ lineHeight: '32px', margin: '0 8px' }}>{itemCount[index]}</div>}
-                                    <Button type="text" icon={<PlusOutlined />} onClick={() => incrementItem(index)} />
+                                    {itemCount[id] !== 0 && <div style={{ lineHeight: '32px', margin: '0 8px' }}>{itemCount[id]}</div>}
+                                    <Button type="text" icon={<PlusOutlined />} onClick={() => incrementItem(id)} />
                                 </div>
                             ]}
                             cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
@@ -69,15 +69,15 @@ const ProductsLayout = ({ products, setItemCount, itemCount }) => {
                             <Card.Meta
                                 title={title}
                                 description={
-                                    expandedDescription[index] ? description : `${description.slice(0, 100)}...`
+                                    expandedDescription[id] ? description : `${description.slice(0, 100)}...`
                                 }
                             />
                             {description.length > 100 && (
                                 <div
-                                    onClick={() => toggleDescription(index)}
+                                    onClick={() => toggleDescription(id)}
                                     style={{ color: '#1890ff', cursor: 'pointer' }}
                                 >
-                                    {expandedDescription[index] ? 'Show Less' : 'Show More'}
+                                    {expandedDescription[id] ? 'Show Less' : 'Show More'}
                                 </div>
                             )}
                         </Card>

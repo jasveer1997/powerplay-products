@@ -51,12 +51,10 @@ const createActions = (actionType) => {
     }
 };
 
-export const getLoadingActions = actionName => {
-    return {
+export const getLoadingActions = actionName => ({
         SUCCESS: `${actionName}$_SUCCESS`,
         FAIL: `${actionName}_FAIL`,
         LOADING: actionName,
-    };
-};
+    });
 
 export default createActions;

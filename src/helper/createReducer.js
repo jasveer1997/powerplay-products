@@ -1,6 +1,7 @@
 import { getLoadingActions } from './actions'
 
 const getAsyncReducer = (actionType, { initialState = {}, merge: defaultMerge = true }) => {
+    // added 3 main props required to handle API flows in UI
     initialState = {
         isLoading: false,
         loaded: false,
@@ -30,7 +31,7 @@ const getAsyncReducer = (actionType, { initialState = {}, merge: defaultMerge = 
                     ...state,
                     data,
                     isLoading: false,
-                    loaded: action.type === SUCCESS, // Todo: Check
+                    loaded: action.type === SUCCESS,
                     loadingData: undefined,
                     hasError: false,
                     error: undefined,

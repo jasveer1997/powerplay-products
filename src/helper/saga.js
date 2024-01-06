@@ -21,8 +21,8 @@ function ejectSaga(store, name) {
     let hasSaga = checkSagaExists(name, store.injectedSagas);
 
     if (hasSaga) {
-        const descriptor = store.injectedSagas[name];
-        // descriptor.task.cancel();
+        // const descriptor = store.injectedSagas[name];
+        // descriptor.task.cancel(); // can be canceled
         // Clean up in production; in development we need `descriptor.saga` for hot reloading
         if (process.env.NODE_ENV === 'production') {
             store.injectedSagas[name] = 'done';

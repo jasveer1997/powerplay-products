@@ -3,35 +3,26 @@ import {useNavigate} from "react-router-dom";
 import {Button, Col, Form, Input, Row, notification} from 'antd';
 import {useAuth} from "../../hooks/useAuth";
 import {USER_AUTH_STATE} from "../../config/constants";
+import {AUTH_LABELS, AUTH_MESSAGES, SERVER_MESSAGES} from "../../config/messages";
+import {FormStyle, SubmitStyle} from "./style";
 
 const LoginLayout = ({ doLogin, isLoading }) => (
     <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh'}}>
         <Col span={8} >
             <Form
+                {...FormStyle}
                 name="basic"
-                labelCol={{
-                    span: 8,
-                }}
-                wrapperCol={{
-                    span: 16,
-                }}
-                style={{
-                    maxWidth: 800,
-                }}
-                initialValues={{
-                    remember: true,
-                }}
+                initialValues={{remember: true}}
                 onFinish={doLogin}
-                // onFinishFailed={onFinishFailed}
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Username"
+                    label={AUTH_LABELS.USERNAME}
                     name="username"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your username!',
+                            message: AUTH_MESSAGES.USERNAME_REQ,
                         },
                     ]}
                 >
@@ -39,12 +30,12 @@ const LoginLayout = ({ doLogin, isLoading }) => (
                 </Form.Item>
 
                 <Form.Item
-                    label="Password"
+                    label={AUTH_LABELS.PASSWORD}
                     name="password"
                     rules={[
                         {
                             required: true,
-                            message: 'Please input your password!',
+                            message: AUTH_MESSAGES.PWD_REQ,
                         },
                     ]}
                 >
@@ -52,10 +43,7 @@ const LoginLayout = ({ doLogin, isLoading }) => (
                 </Form.Item>
 
                 <Form.Item
-                    wrapperCol={{
-                        offset: 8,
-                        span: 16,
-                    }}
+                    {...SubmitStyle}
                 >
                     <Button type="primary" htmlType="submit" loading={isLoading}>
                         Submit
@@ -67,24 +55,26 @@ const LoginLayout = ({ doLogin, isLoading }) => (
 );
 
 const Wrapper = ({ doLogin, setCurrentUserState, login = {} }) => {
-    const [username, setUsername] = useState('');
     const navigate = useNavigate();
     const { loginUserToBrowserSession } = useAuth();
+
+    const [username, setUsername] = useState('');
+
     const onFinish = useCallback(values => {
         setUsername(values.username);
         doLogin(values);
-    }, [doLogin]);
+    }, [doLogin, setUsername]);
 
     useEffect(() => {
         if (login.hasError) {
             const { response: { status } = {} } = login.error;
-            let msg = 'We are facing some internal server error. Please retry after some time';
+            let msg = SERVER_MESSAGES.INTERNAL_SERVER_ERROR;
             if (status === 401) {
-                msg = 'Invalid credentials';
+                msg = SERVER_MESSAGES.INVALID_CREDENTIALS;
             }
             notification.error({
                 duration: 3,
-                message: `Login Failed`,
+                message: AUTH_MESSAGES.LOGIN_FAIL,
                 description: msg,
                 placement: 'top',
             });
@@ -95,8 +85,8 @@ const Wrapper = ({ doLogin, setCurrentUserState, login = {} }) => {
         if (login.loaded && !login.hasError) {
             notification.info({
                 duration: 2,
-                message: `Successfully logged in`,
-                description: "Welcome to powerplay products",
+                message: AUTH_MESSAGES.LOGIN_SUCCESS,
+                description: AUTH_MESSAGES.LOGIN_POST_SUCCESS,
                 placement: 'top',
             });
             loginUserToBrowserSession(username, login.token);

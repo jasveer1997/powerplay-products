@@ -31,7 +31,7 @@ const withReducer = (reducers) => (Component) => (props) => {
     const store = useStore();
 
     useEffect(() => {
-        Array.isArray(reducers)
+        Array.isArray(reducers) // for when dashboard container will have single product / cart checkouts as well
             ? injectMultipleReducer(store, reducers)
             : injectReducer(store, reducers);
 

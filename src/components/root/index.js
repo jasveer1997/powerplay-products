@@ -19,9 +19,6 @@ const Wrapper = props => {
     return <Dashboard {...props} />;
 };
 
-const SingleProduct = null;
-const Cart = null;
-
 const AppWithReduxStoreAndRoutes = () => {
     const [currentUserState, setCurrentUserState] = useState(USER_AUTH_STATE.LOGIN);
     return (

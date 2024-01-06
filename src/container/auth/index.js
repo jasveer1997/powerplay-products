@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { compose } from 'recompose';
 import container from './container';
 import { USER_AUTH_STATE } from "./config/constants";

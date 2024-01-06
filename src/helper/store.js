@@ -3,6 +3,7 @@ import { combineReducers, legacy_createStore as createReduxStore, applyMiddlewar
 import {Provider as ReduxProvider} from 'react-redux';
 import sagaMiddleware from "./sagaMiddleware";
 
+// If no reducer is provided - redux throws error
 const dummyReducer = combineReducers({
     pageInfo: () => 'pageInfo dummy reducer'
 });

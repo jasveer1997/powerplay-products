@@ -2,7 +2,7 @@ import axios from "axios";
 
 const get = async ({ urlObj }) => {
     try {
-        const response = await axios.get(urlObj.url);
+        const response = await fetch(`${urlObj.url}?size=2`); // axios.get(urlObj.url, { params: urlObj.query });
         console.log(response.data);
         console.log(response.status);
         console.log(response.statusText);
